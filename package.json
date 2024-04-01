@@ -1,0 +1,43 @@
+{
+  "name": "",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "license": "AGPL-version-3.0",
+  "private": false,
+  "engines": {
+    "node": ">= 14.0.0",
+    "npm": ">= 6.0.0"
+  },
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "bugs": "",
+  "keywords": [],
+  "author": {
+    "name": "Team 37",
+    "email": "",
+    "url": "https://github.com/JamesM813/cs326_project"
+  },
+  "contributors": [
+    "James McGillicuddy, jrm803@gmail.com, JamesM813",
+    "Tisya Singh, tisya.raj@gmail.com, tsingh-04",
+    "Ethan Truong, ethanpt911@gmail.com, eptruong",
+    "Ahmad Shahrour, ashahrourr@gmail.com, Ahmad Shahrour"
+  ],
+  "scripts": {
+    "dev": "",
+    "test": "",
+    "milestone-01": "http-server src/docs/milestone-01 -p 3000 -c-1 -o -s",
+    "validate-html": "html-validate src/**/*.html",
+    "prettier": "prettier src —write"
+  },
+  "devDependencies": {
+    "html-validate": "^8.18.1",
+    "http-server": "^14.1.1",
+    "prettier": "^3.2.5"
+  }
+}

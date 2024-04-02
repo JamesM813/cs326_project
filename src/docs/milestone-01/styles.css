@@ -1,0 +1,50 @@
+/* styles.css */
+
+/* 1. Element Selector Rule */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3 {
+    color: #333;
+}
+
+p {
+    color: #666;
+}
+
+/* 2. ID Selector Rule */
+#overview {
+    background-color: #f9f9f9;
+    padding: 20px;
+}
+
+/* 3. Class Selector Rule */
+.team-member {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 20px;
+}
+
+.team-member img {
+    width: 100px;
+    border-radius: 50%;
+}
+
+/* 4. Nested-Tag / Sub-Element Selector Rule */
+nav a {
+    text-decoration: none;
+    color: #333;
+}
+
+nav a:hover {
+    color: #007bff;
+}
+
+/* 5. Pseudo-Class Selector Rule */
+a:hover {
+    text-decoration: underline;
+}

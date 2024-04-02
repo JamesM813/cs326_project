@@ -23,14 +23,14 @@ p {
 }
 
 /* 3. Class Selector Rule */
-.team-member {
+.team {
     margin-bottom: 20px;
     border-bottom: 1px solid #ccc;
     padding-bottom: 20px;
 }
 
-.team-member img {
-    width: 100px;
+.team img {
+    max-width: 100px;
     border-radius: 50%;
 }
 

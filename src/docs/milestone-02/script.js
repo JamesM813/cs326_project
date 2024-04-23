@@ -1,7 +1,8 @@
 //Our quiz questions. We may have to move this to a different file
 //or a mock database thing
-
-const quizData = [
+let timerInterval;
+let selectedQuizData;
+const historyQuizData = [
     {
       question: "What year did World War II end?",
       answers: ["1945", "1939", "1950", "1940"],
@@ -13,21 +14,61 @@ const quizData = [
       correctAnswer: "Paris"
     },
   ];
+
+  const scienceQuizData = [
+    {
+        question: "What is the chemical symbol for water?",
+        answers: ["H2O", "CO2", "NaCl", "O2"],
+        correctAnswer: "H2O"
+    },
+];
+
+const mathQuizData = [
+  {
+      question: "What is the value of pi (π)?",
+      answers: ["3.14", "2.71", "1.618", "4.669"],
+      correctAnswer: "3.14"
+  },
+  {
+      question: "What is the square root of 81?",
+      answers: ["7", "8", "9", "10"],
+      correctAnswer: "9"
+  }
+];
   
   let currentQuestion = 0;
   let score = 0;
   let timeLeft = 10;
 
   function startQuiz(category) {
-    loadQuestion();
+
+    switch (category.toLowerCase()) {
+        case 'history':
+            selectedQuizData = historyQuizData;
+            break;
+        case 'science':
+            selectedQuizData = scienceQuizData;
+            break;
+        case 'math':
+            selectedQuizData = mathQuizData;
+            break;
+        default:
+            console.error('Invalid category');
+            return;
+    }
+
+    const quizSection = document.getElementById("quiz");
+    quizSection.style.display = "none";
+    loadQuestion(selectedQuizData);
+    startTimer();
   }
   
-  function loadQuestion() {
+  function loadQuestion(selectedQuizData) {
     const questionElement = document.getElementById("question-text");
     const answerElement = document.getElementById("answers");
     const questionNumberElement = document.getElementById("question-number");
   
-    const currentQuizData = quizData[currentQuestion];
+    const currentQuizData = selectedQuizData[currentQuestion];
   
     questionElement.innerText = currentQuizData.question;
     questionNumberElement.innerText = currentQuestion + 1;
@@ -38,63 +79,103 @@ const quizData = [
       const button = document.createElement("button");
       button.innerText = answer;
       button.classList.add("btn");
-      button.addEventListener("click", () => checkAnswer(answer));
+      button.addEventListener("click", () => checkAnswer(answer, selectedQuizData));
       answerElement.appendChild(button);
     });
   
-    startTimer();
+
   }
-  
-  function checkAnswer(answer) {
-    const currentQuizData = quizData[currentQuestion];
-  
-    if (answer === currentQuizData.correctAnswer) {
-      score++;
+
+  function checkAnswer(answer, selectedQuizData) {
+    const currentQuizData = selectedQuizData[currentQuestion];
+
+        if (answer === currentQuizData.correctAnswer) {
+            score++;
+        }
+
+        currentQuestion++;
+
+        if (currentQuestion < selectedQuizData.length) {
+            loadQuestion(selectedQuizData);
+        } else {
+            clearInterval(timerInterval);
+            endQuiz(selectedQuizData);
+        }
     }
-  
-    currentQuestion++;
-  
-    if (currentQuestion < quizData.length) {
-      loadQuestion();
-    } else {
-      endQuiz();
-    }
-  }
   
   function startTimer() {
     const timerElement = document.getElementById("time-left");
-    const timerInterval = setInterval(() => {
+    timerInterval = setInterval(() => {
       if (timeLeft > 0) {
         timeLeft--;
         timerElement.innerText = timeLeft;
       } else {
         clearInterval(timerInterval);
-        checkAnswer("");
+        checkAnswer("", selectedQuizData);
       }
     }, 1000);
   }
   
-  function endQuiz() {
+  function endQuiz(selectedQuizData) {
     const quizSection = document.getElementById("quiz");
     const resultSection = document.getElementById("result");
     const resultTextElement = document.getElementById("result-text");
-  
+    const showAnswersButton = document.getElementById("show-answers-button");
     quizSection.style.display = "none";
     resultSection.style.display = "block";
+    showAnswersButton.style.display = "block";
+
+    clearInterval(timerInterval);
   
-    resultTextElement.innerText = `You scored ${score} out of ${quizData.length}!`;
+    resultTextElement.innerText = `You scored ${score} out of ${selectedQuizData.length}!`;
   }
   
   function restartQuiz() {
     currentQuestion = 0;
     score = 0;
-    timeLeft = 10;
-    loadQuestion();
+    timeLeft = 11;
+    startTimer();
+    loadQuestion(selectedQuizData);
   
     const quizSection = document.getElementById("quiz");
     const resultSection = document.getElementById("result");
+    const showAnswersButton = document.getElementById("show-answers-button");
   
-    quizSection.style.display = "block";
+    quizSection.style.display = "none";
     resultSection.style.display = "none";
+    showAnswersButton.style.display = "none"; 
   }
+
+function showCorrectAnswers() {
+  const resultSection = document.getElementById("result");
+  const correctAnswersSection = document.getElementById("correct-answers");
+
+
+  if (correctAnswersSection.style.display === "block") {
+      correctAnswersSection.style.display = "none";
+
+      resultSection.querySelector("button").style.display = "block";
+  } else {
+      correctAnswersSection.innerHTML = "";
+
+      const correctAnswersList = document.createElement("ul");
+      correctAnswersList.classList.add("correct-answers-list");
+
+      selectedQuizData.forEach((question, index) => {
+          const listItem = document.createElement("li");
+          listItem.innerHTML = `<strong>Question ${index + 1}:</strong> ${question.correctAnswer}`;
+          correctAnswersList.appendChild(listItem);
+      });
+
+      correctAnswersSection.appendChild(correctAnswersList);
+
+      correctAnswersSection.style.display = "block";
+
+      resultSection.querySelector("button").style.display = "none";
+  }
+}
+
+  function quitQuiz() {
+    window.location.reload();
+}
   

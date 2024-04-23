@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trivia Fun</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Trivia Fun!</h1>
+    <p>An online way to challenge yourself and your friends at your trivia knowledge!</p>
+  </header>
+
+  <main>
+    <section id="quiz">
+      <h2>Welcome to Trivia Fun!</h2>
+      <p>Select a category below to start the quiz:</p>
+      <div class="categories">
+        <button onclick="startQuiz('history')">History</button>
+        <button onclick="startQuiz('science')">Science</button>
+        <button onclick="startQuiz('math')">Math</button>
+      </div>
+    </section>
+
+    <section id="question">
+      <h2>Question <span id="question-number"></span></h2>
+      <p id="question-text"></p>
+      <div id="answers">
+        <!-- Answers should be populated dynamically... I hope -->
+      </div>
+      <div id="timer">Time Left: <span id="time-left">10</span> seconds</div>
+    </section>
+
+    <section id="result">
+      <h2>Quiz Result</h2>
+      <p id="result-text"></p>
+      <button onclick="restartQuiz()">Restart Quiz</button>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2024 TriviaFun</p>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

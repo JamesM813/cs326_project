@@ -7,8 +7,27 @@
 let timerInterval;
 let selectedQuizData;
 
+function mockFetch(url) {
+  //this is a mocking fetch opperation from some API that we can eventually create!
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (url === 'history') {
+        resolve(historyQuizData);
+      } else if (url === 'science') {
+        resolve(scienceQuizData);
+      } else if (url === 'math') {
+        resolve(mathQuizData);
+      } else {
+        reject(new Error('Invalid URL'));
+      }
+    }, Math.random() * 1000); // simulating network delay
+  });
+}
+
+
+
 //eventually, this will be in a pouchDB database. For now, we will just keep it like this 
-const historyQuizData = [
+let historyQuizData = [
     {
       question: "What year did World War II end?",
       answers: ["1945", "1939", "1950", "1940"],
@@ -21,7 +40,7 @@ const historyQuizData = [
     },
   ];
 
-  const scienceQuizData = [
+let scienceQuizData = [
     {
         question: "What is the chemical symbol for water?",
         answers: ["H2O", "CO2", "NaCl", "O2"],
@@ -29,7 +48,7 @@ const historyQuizData = [
     },
 ];
 
-const mathQuizData = [
+let mathQuizData = [
   {
       question: "What is the value of pi (π)?",
       answers: ["3.14", "2.71", "1.618", "4.669"],
@@ -41,6 +60,10 @@ const mathQuizData = [
       correctAnswer: "9"
   }
 ];
+
+//here we are assuming that we do NOT have our data yet, while we mock the process
+
+
   
 //we will also add more types of question in the back-end
 
@@ -48,28 +71,18 @@ const mathQuizData = [
   let score = 0;
   let timeLeft = 10; //maybe change this to update dynamically, like 5 seconds per question?
 
-  function startQuiz(category) {
-
-    switch (category.toLowerCase()) {
-        case 'history':
-            selectedQuizData = historyQuizData;
-            break;
-        case 'science':
-            selectedQuizData = scienceQuizData;
-            break;
-        case 'math':
-            selectedQuizData = mathQuizData;
-            break;
-        default:
-            console.error('Invalid category');
-            return;
+  async function startQuiz(category) { //this functions as expected, you can tell when you click a category it takes a sec to "load"
+    try {
+      selectedQuizData = await mockFetch(category.toLowerCase());
+      const quizSection = document.getElementById("quiz");
+      quizSection.style.display = "none";
+      loadQuestion(selectedQuizData);
+      startTimer();
+    } catch (error) {
+      console.error(error);
     }
-
-    const quizSection = document.getElementById("quiz");
-    quizSection.style.display = "none";
-    loadQuestion(selectedQuizData);
-    startTimer();
   }
+  
   
   function loadQuestion(selectedQuizData) {
     const questionElement = document.getElementById("question-text");

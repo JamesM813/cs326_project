@@ -1,35 +1,33 @@
-/* Reset CSS */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Global Styles */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f2f2f2;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; /* apple fonts are cool */
+  background-color: #f8f8f8;
   color: #333;
 }
 
-/* Header Styles */
 header {
-  background-color: #1e1e1e;
+  background: linear-gradient(135deg, #007bff, #28a745); 
   color: #fff;
   text-align: center;
-  padding: 40px 0;
+  padding: 20px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 header h1 {
-  font-size: 3rem;
-  margin-bottom: 10px;
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 5px;
 }
 
 header p {
   font-size: 1.2rem;
 }
 
-/* Main Content Styles */
 main {
   max-width: 900px;
   margin: 20px auto;
@@ -55,7 +53,6 @@ p {
   color: #555;
 }
 
-/* Category Buttons */
 .categories {
   display: flex;
   justify-content: center;
@@ -65,20 +62,20 @@ p {
   margin: 0 15px;
   padding: 15px 30px;
   font-size: 1.1rem;
-  background-color: #1e1e1e;
-  color: #fff;
-  border: 2px solid #1e1e1e;
+  background-color: #fff;
+  color: #007bff;
+  border: 2px solid #007bff;
   border-radius: 30px;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .categories button:hover {
-  background-color: transparent;
-  color: #1e1e1e;
+  background-color: #007bff;
+  color: #fff;
 }
 
-/* Question Section Styles */
 #question-number {
   font-weight: bold;
   font-size: 1.2rem;
@@ -95,17 +92,18 @@ p {
   margin-bottom: 15px;
   padding: 15px 30px;
   font-size: 1.1rem;
-  background-color: #1e1e1e;
-  color: #fff;
-  border: 2px solid #1e1e1e;
+  background-color: #fff;
+  color: #28a745;
+  border: 2px solid #28a745;
   border-radius: 30px;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 #answers button:hover {
-  background-color: transparent;
-  color: #1e1e1e;
+  background-color: #28a745;
+  color: #fff;
 }
 
 #timer {
@@ -114,7 +112,6 @@ p {
   color: #555;
 }
 
-/* Result Section Styles */
 #result {
   display: none;
   text-align: center;
@@ -126,26 +123,34 @@ p {
   color: #1e1e1e;
 }
 
-/* Generic Button Styles */
 button {
   padding: 15px 30px;
   font-size: 1.1rem;
-  background-color: #1e1e1e;
+  background-color: #007bff;
   color: #fff;
   border: none;
   border-radius: 30px;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 button:hover {
-  background-color: #555;
+  background-color: #0056b3;
 }
 
-/* Footer Styles */
 footer {
   text-align: center;
   margin-top: 40px;
   color: #888;
   font-size: 0.9rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+#question, #result {
+  animation: fadeIn 0.5s ease-in-out;
 }

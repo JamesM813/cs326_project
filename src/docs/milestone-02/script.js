@@ -2,6 +2,8 @@
 //or a mock database thing
 let timerInterval;
 let selectedQuizData;
+
+//eventually, this will be in a pouchDB database. For now, we will just keep it like this 
 const historyQuizData = [
     {
       question: "What year did World War II end?",
@@ -36,9 +38,11 @@ const mathQuizData = [
   }
 ];
   
+//we will also add more types of question in the back-end
+
   let currentQuestion = 0;
   let score = 0;
-  let timeLeft = 10;
+  let timeLeft = 10; //maybe change this to update dynamically, like 5 seconds per question?
 
   function startQuiz(category) {
 

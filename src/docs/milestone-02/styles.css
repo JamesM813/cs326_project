@@ -1,107 +1,151 @@
+/* Reset CSS */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f7f7f7;
-  }
-  
-  header {
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    padding: 20px 0;
-  }
-  
-  header h1 {
-    font-size: 2rem;
-  }
-  
-  main {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 5px;
-  }
-  
-  section {
-    margin-bottom: 20px;
-  }
-  
-  h2 {
-    margin-bottom: 10px;
-  }
-  
-  p {
-    margin-bottom: 15px;
-  }
-  
-  .categories {
-    display: flex;
-    justify-content: center;
-  }
-  
-  .categories button {
-    margin: 0 10px;
-    padding: 10px 20px;
-    font-size: 1rem;
-    background-color: #333;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .categories button:hover {
-    background-color: #555;
-  }
-  
-  #question-number {
-    font-weight: bold;
-  }
-  
-  #question-text {
-    margin-bottom: 15px;
-  }
-  
-  #answers {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  #answers button {
-    margin-bottom: 10px;
-  }
-  
-  #timer {
-    margin-top: 20px;
-  }
-  
-  #result {
-    display: none;
-    text-align: center;
-  }
-  
-  #result-text {
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-  
-  button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    background-color: #333;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #555;
-  }
-  
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Global Styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f2f2f2;
+  color: #333;
+}
+
+/* Header Styles */
+header {
+  background-color: #1e1e1e;
+  color: #fff;
+  text-align: center;
+  padding: 40px 0;
+}
+
+header h1 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+header p {
+  font-size: 1.2rem;
+}
+
+/* Main Content Styles */
+main {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+section {
+  margin-bottom: 30px;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #1e1e1e;
+}
+
+p {
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: #555;
+}
+
+/* Category Buttons */
+.categories {
+  display: flex;
+  justify-content: center;
+}
+
+.categories button {
+  margin: 0 15px;
+  padding: 15px 30px;
+  font-size: 1.1rem;
+  background-color: #1e1e1e;
+  color: #fff;
+  border: 2px solid #1e1e1e;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.categories button:hover {
+  background-color: transparent;
+  color: #1e1e1e;
+}
+
+/* Question Section Styles */
+#question-number {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #1e1e1e;
+}
+
+#question-text {
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  color: #1e1e1e;
+}
+
+#answers button {
+  margin-bottom: 15px;
+  padding: 15px 30px;
+  font-size: 1.1rem;
+  background-color: #1e1e1e;
+  color: #fff;
+  border: 2px solid #1e1e1e;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#answers button:hover {
+  background-color: transparent;
+  color: #1e1e1e;
+}
+
+#timer {
+  font-size: 1.1rem;
+  margin-top: 30px;
+  color: #555;
+}
+
+/* Result Section Styles */
+#result {
+  display: none;
+  text-align: center;
+}
+
+#result-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1e1e1e;
+}
+
+/* Generic Button Styles */
+button {
+  padding: 15px 30px;
+  font-size: 1.1rem;
+  background-color: #1e1e1e;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: #555;
+}
+
+/* Footer Styles */
+footer {
+  text-align: center;
+  margin-top: 40px;
+  color: #888;
+  font-size: 0.9rem;
+}

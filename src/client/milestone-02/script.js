@@ -1,5 +1,9 @@
-//Our quiz questions. We may have to move this to a different file
-//or a mock database thing
+/**
+ * Our quiz questions.
+ * We may have to move them to a different file or a mock database
+ * @type {Array<Object>} An array of objects representing quiz questions, possible answers, and the correct answer.
+ */
+
 let timerInterval;
 let selectedQuizData;
 

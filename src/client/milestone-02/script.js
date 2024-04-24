@@ -178,7 +178,7 @@ function showCorrectAnswers() {
       resultSection.querySelector("button").style.display = "block";
   } else {
       correctAnswersSection.innerHTML = "";
-
+ 
       const correctAnswersList = document.createElement("ul");
       correctAnswersList.classList.add("correct-answers-list");
 
@@ -196,7 +196,28 @@ function showCorrectAnswers() {
   }
 }
 
-  function quitQuiz() {
-    window.location.reload();
+function quitQuiz() {
+  window.location.reload();
 }
+
+function initializeScore(){
+  let score = localStorage.getItem('score');
+  if(score === null){
+    localStorage.setItem('score', 0);
+    score = 0;
+  }
+  return parseInt(score);
+}
+
+function updateScore(score){
+  document.getElementsById('score').textContent = 'Score: ' + score;
+}
+
+function incrementScore(){
+  let score = initializeScore();
+  score++;
+  localStorage.setItem('score', score.toString());
+  updateScore(score);
+}
+
   

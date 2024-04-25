@@ -7,8 +7,13 @@
 let timerInterval;
 let selectedQuizData;
 
+/**
+ * 
+ * @param {string} url The URL used to fetch data from.
+ * @returns {Promise<any>} Returns the promise resolving with fetched data or the rejected error. 
+ */
 function mockFetch(url) {
-  //this is a mocking fetch opperation from some API that we can eventually create!
+  //this is a mocking fetch operation from some API that we can eventually create!
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (url === 'history') {
@@ -27,6 +32,11 @@ function mockFetch(url) {
 
 
 //eventually, this will be in a pouchDB database. For now, we will just keep it like this 
+
+/**
+ * Quiz data for history questions.
+ * @type {Object[]}
+ */
 let historyQuizData = [
     {
       question: "What year did World War II end?",
@@ -40,6 +50,10 @@ let historyQuizData = [
     },
   ];
 
+/**
+ * Quiz data for science questions.
+ * @type {Object[]}
+ */
 let scienceQuizData = [
     {
         question: "What is the chemical symbol for water?",
@@ -48,6 +62,10 @@ let scienceQuizData = [
     },
 ];
 
+/**
+ * Quiz data for math questions.
+ * @type {Object[]}
+ */
 let mathQuizData = [
   {
       question: "What is the value of pi (π)?",
@@ -71,6 +89,10 @@ let mathQuizData = [
   let score = 0;
   let timeLeft = 10; //maybe change this to update dynamically, like 5 seconds per question?
 
+  /**
+   * Starts quiz according to the category unless an error is caught.
+   * @param {string} category Category of the quiz ("history", "science", "math").
+   */
   async function startQuiz(category) { //this functions as expected, you can tell when you click a category it takes a sec to "load"
     try {
       selectedQuizData = await mockFetch(category.toLowerCase());
@@ -83,7 +105,10 @@ let mathQuizData = [
     }
   }
   
-  
+  /**
+   * Loads question given the quiz data and updates quiz UI.
+   * @param {Object[]} selectedQuizData Quiz data for the selected category.
+   */
   function loadQuestion(selectedQuizData) {
     const questionElement = document.getElementById("question-text");
     const answerElement = document.getElementById("answers");
@@ -103,10 +128,13 @@ let mathQuizData = [
       button.addEventListener("click", () => checkAnswer(answer, selectedQuizData));
       answerElement.appendChild(button);
     });
-  
-
   }
 
+  /**
+   * Checks the user's answer.
+   * @param {string} answer 
+   * @param {Object[]} selectedQuizData 
+   */
   function checkAnswer(answer, selectedQuizData) {
     const currentQuizData = selectedQuizData[currentQuestion];
 
@@ -125,6 +153,9 @@ let mathQuizData = [
         }
     }
   
+  /**
+   * Initializes timer for 10 seconds.
+   */
   function startTimer() {
     const timerElement = document.getElementById("time-left");
     timerInterval = setInterval(() => {
@@ -138,6 +169,10 @@ let mathQuizData = [
     }, 1000);
   }
   
+  /**
+   * 
+   * @param {Object[]}} selectedQuizData 
+   */
   function endQuiz(selectedQuizData) {
     const quizSection = document.getElementById("quiz");
     const resultSection = document.getElementById("result");
@@ -152,6 +187,10 @@ let mathQuizData = [
     resultTextElement.innerText = `You scored ${score} out of ${selectedQuizData.length}!`;
   }
   
+
+  /**
+   * Restarts the quiz
+   */
   function restartQuiz() {
     currentQuestion = 0;
     score = 0;
@@ -168,6 +207,9 @@ let mathQuizData = [
     showAnswersButton.style.display = "none"; 
   }
 
+/**
+ * Reveals correct answers for each question.
+ */
 function showCorrectAnswers() {
   const resultSection = document.getElementById("result");
   const correctAnswersSection = document.getElementById("correct-answers");
@@ -197,12 +239,19 @@ function showCorrectAnswers() {
   }
 }
 
+/**
+ * Exits the quiz and resets player score to 0.
+ */
 function quitQuiz() {
   localStorage.setItem('playerScore', '0'); //reset player score
   window.location.reload();
 }
 
-//should store quiz score to local storage
+/**
+ * Initializes quiz score by checking local storage
+ * and if it isn't there then set to 0.
+ * @returns {number} Initialized quiz score.
+ */
 function initializeQuizScore(){
   let playerScore = localStorage.getItem('playerScore');
   if(playerScore === null){
@@ -212,6 +261,11 @@ function initializeQuizScore(){
   return parseInt(playerScore);
 }
 
+/**
+ * Updates player's quiz score to the given score and updated
+ * to local storage accordingly.
+ * @param {number} scoreToAdd The score to add to player's current score. 
+ */
 function updateQuizScore(scoreToAdd){
   let playerScore = initializeQuizScore();
   playerScore+=scoreToAdd;
@@ -222,7 +276,11 @@ function updateQuizScore(scoreToAdd){
 
 let playerScore = initializeQuizScore();
 
-//should store total score to local storage
+/**
+ * Initializes total score by checking local storage
+ * and if it isn't there then set to 0.
+ * @returns {number} The initialized total score
+ */
 function initializeTotalScore(){
   let totalScore = localStorage.getItem('totalScore');
   if(totalScore === null){
@@ -232,6 +290,10 @@ function initializeTotalScore(){
   return parseInt(totalScore);
 }
 
+/**
+ * Update total score given score to add.
+ * @param {number} scoreToAdd  
+ */
 function updateTotalScore(scoreToAdd){
   let totalScore = initializeTotalScore();
   totalScore+=scoreToAdd;

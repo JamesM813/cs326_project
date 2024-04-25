@@ -112,6 +112,7 @@ let mathQuizData = [
 
         if (answer === currentQuizData.correctAnswer) {
             score++;
+            updateQuizScore(1);
         }
 
         currentQuestion++;
@@ -187,7 +188,7 @@ function showCorrectAnswers() {
           listItem.innerHTML = `<strong>Question ${index + 1}:</strong> ${question.correctAnswer}`;
           correctAnswersList.appendChild(listItem);
       });
-
+ 
       correctAnswersSection.appendChild(correctAnswersList);
 
       correctAnswersSection.style.display = "block";
@@ -197,27 +198,48 @@ function showCorrectAnswers() {
 }
 
 function quitQuiz() {
+  localStorage.setItem('playerScore', '0'); //reset player score
   window.location.reload();
 }
 
-function initializeScore(){
-  let score = localStorage.getItem('score');
-  if(score === null){
-    localStorage.setItem('score', 0);
-    score = 0;
+//should store quiz score to local storage
+function initializeQuizScore(){
+  let playerScore = localStorage.getItem('playerScore');
+  if(playerScore === null){
+    localStorage.setItem('playerScore', 0);
+    playerScore = '0';
   }
-  return parseInt(score);
+  return parseInt(playerScore);
 }
 
-function updateScore(score){
-  document.getElementsById('score').textContent = 'Score: ' + score;
+function updateQuizScore(scoreToAdd){
+  let playerScore = initializeQuizScore();
+  playerScore+=scoreToAdd;
+  localStorage.setItem('playerScore', playerScore.toString());
+  const scoreElement = document.getElementById('player-score');
+  scoreElement.textContent = 'Player Score:' + playerScore;
 }
 
-function incrementScore(){
-  let score = initializeScore();
-  score++;
-  localStorage.setItem('score', score.toString());
-  updateScore(score);
+let playerScore = initializeQuizScore();
+
+//should store total score to local storage
+function initializeTotalScore(){
+  let totalScore = localStorage.getItem('totalScore');
+  if(totalScore === null){
+    localStorage.setItem('totalScore', 0);
+    totalScore = '0';
+  }
+  return parseInt(totalScore);
 }
+
+function updateTotalScore(scoreToAdd){
+  let totalScore = initializeTotalScore();
+  totalScore+=scoreToAdd;
+  localStorage.setItem('totalScore', totalScore.toString());
+  const totalScoreElement = document.getElementById('total-score');
+  totalScoreElement.textContent = 'Total Score:' + totalScore;
+}
+
+
 
   

@@ -1,0 +1,10 @@
+[
+    {
+        "_id": "000001",
+        "question": "Welcome to Trivia Fun! Click 'B'!",
+        "a": "Wrong answer!",
+        "b": "Click Me!",
+        "c": "Not this one...",
+        "d": "Getting colder!"
+    }
+]

@@ -28,15 +28,19 @@ async function basicServer(request, response) {
 
   // Grab the HTTP method.
   const method = request.method;
-  if (method === "POST" ) {
+  if (method === "POST" && pathname === "/savePlayerScore") {
+      const database = await Database("trivia");
+      const score = query;
+      await database.savePlayerScore(score);
+      response.writeHead(200);
+      response.end();
+  }
+  // else if () {
+  //   const database = await Database("trivia");
+  // }
+  // else {
 
-  }
-  else if () {
-
-  }
-  else {
-    
-  }
+  // }
 }
 
 http.createServer(basicServer).listen(port, () => {

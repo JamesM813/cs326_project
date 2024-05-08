@@ -25,8 +25,8 @@ const initdb = async (dbname) => {
     db.close();
   };
 
-const Database = (dbname) => {
-    initdb(dbname);
+const Database = async (dbname) => {
+    await initdb(dbname);
 
     const getDB = () => new PouchDB(dbname);
     const obj = {

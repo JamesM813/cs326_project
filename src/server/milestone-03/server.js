@@ -21,6 +21,24 @@ as follows:
 Knowing this, we can easily sort our questions for each type of quiz
 */
 
+async function basicServer(request, response) {
+  const parsedUrl = url.parse(request.url, true);
+  const pathname = parsedUrl.pathname;
+  const query = parsedUrl.query;
+
+  // Grab the HTTP method.
+  const method = request.method;
+  if (method === "POST" ) {
+
+  }
+  else if () {
+
+  }
+  else {
+    
+  }
+}
+
 http.createServer(basicServer).listen(port, () => {
     console.log(`Server started on port ${port}`);
   });

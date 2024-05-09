@@ -6,27 +6,24 @@ import PouchDB from "pouchdb";
  *
  * @param {string} dbname - The name of the database to initialize.
  */
-const initdb = async (dbname) => {
+const initdb = async (dbname, questions) => {
+  const db = new PouchDB(dbname);
 
-    const db = new PouchDB(dbname);
-  
-    try {
-      const questions = await db.get("questions");
-    } catch (e) {
-      db.put({ _id: "questions", questions: [] });
-    }
+  try {
+      await db.put({
+          _id: "questions",
+          questions: questions
+      });
+      console.log("Questions stored in the database.");
+  } catch (e) {
+      console.error("Error storing questions in the database:", e);
+  }
 
-    try {
-        const games = await db.get("games");
-      } catch (e) {
-        db.put({ _id: "games", games: [] });
-      }
-  
-    db.close();
-  };
+  db.close();
+};
 
-const Database = async (dbname) => {
-    await initdb(dbname);
+const Database = async (dbname, questions) => {
+    await initdb(dbname, questions);
 
     const getDB = () => new PouchDB(dbname);
     const obj = {

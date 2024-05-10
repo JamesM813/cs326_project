@@ -8,7 +8,7 @@ let timerInterval;
 let selectedQuizData;
 
 function mockFetch(url) {
-  //this is a mocking fetch opperation from some API that we can eventually create!
+  //this is a mocking fetch operation from some API that we can eventually create!
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (url === 'history') {
@@ -45,6 +45,12 @@ let scienceQuizData = [
         question: "What is the chemical symbol for water?",
         answers: ["H2O", "CO2", "NaCl", "O2"],
         correctAnswer: "H2O"
+    },
+
+    {
+      question: "What is the closest planet to the sun?",
+      answers: ["Venus", "Mars", "Earth", "Mercury"],
+      correctAnswer: "Mercury"
     },
 ];
 
@@ -83,7 +89,7 @@ let mathQuizData = [
     }
   }
   
-  
+  //generates elements for displaying a quiz question
   function loadQuestion(selectedQuizData) {
     const questionElement = document.getElementById("question-text");
     const answerElement = document.getElementById("answers");
@@ -103,20 +109,16 @@ let mathQuizData = [
       button.addEventListener("click", () => checkAnswer(answer, selectedQuizData));
       answerElement.appendChild(button);
     });
-  
-
   }
 
+  //compares user answer to solution and updates score accordingly, loads next question if applicable
   function checkAnswer(answer, selectedQuizData) {
     const currentQuizData = selectedQuizData[currentQuestion];
-
         if (answer === currentQuizData.correctAnswer) {
             score++;
             updateQuizScore(1);
         }
-
         currentQuestion++;
-
         if (currentQuestion < selectedQuizData.length) {
             loadQuestion(selectedQuizData);
         } else {
@@ -125,6 +127,7 @@ let mathQuizData = [
         }
     }
   
+  //manages countdown timer 
   function startTimer() {
     const timerElement = document.getElementById("time-left");
     timerInterval = setInterval(() => {
@@ -135,9 +138,10 @@ let mathQuizData = [
         clearInterval(timerInterval);
         checkAnswer("", selectedQuizData);
       }
-    }, 1000);
+    }, 1000); 
   }
   
+  //concludes quiz and changes the display screen
   function endQuiz(selectedQuizData) {
     const quizSection = document.getElementById("quiz");
     const resultSection = document.getElementById("result");
@@ -147,12 +151,14 @@ let mathQuizData = [
     resultSection.style.display = "block";
     showAnswersButton.style.display = "block";
 
-    clearInterval(timerInterval);
+    clearInterval(timerInterval); //restarts timer
   
     resultTextElement.innerText = `You scored ${score} out of ${selectedQuizData.length}!`;
+    updateTotalScore(score);
   }
   
   function restartQuiz() {
+    //resets quiz variables, question, and timer
     currentQuestion = 0;
     score = 0;
     timeLeft = 11;
@@ -217,29 +223,23 @@ function updateQuizScore(scoreToAdd){
   playerScore+=scoreToAdd;
   localStorage.setItem('playerScore', playerScore.toString());
   const scoreElement = document.getElementById('player-score');
-  scoreElement.textContent = 'Player Score:' + playerScore;
+  scoreElement.textContent = 'Game Score:' + playerScore;
 }
 
 let playerScore = initializeQuizScore();
 
-//should store total score to local storage
-function initializeTotalScore(){
-  let totalScore = localStorage.getItem('totalScore');
-  if(totalScore === null){
-    localStorage.setItem('totalScore', 0);
-    totalScore = '0';
-  }
-  return parseInt(totalScore);
+function updateTotalScore(){
+  let totalScore = 0;
+  selectedQuizData.forEach(question => {
+      if (checkAnswer(question.answer, question.correctAnswer)) {
+        totalScore++; // Increment total score for each correct answer
+      }
+    });
+  updateQuizScore(totalScore);
 }
 
-function updateTotalScore(scoreToAdd){
-  let totalScore = initializeTotalScore();
-  totalScore+=scoreToAdd;
-  localStorage.setItem('totalScore', totalScore.toString());
-  const totalScoreElement = document.getElementById('total-score');
-  totalScoreElement.textContent = 'Total Score:' + totalScore;
-}
-
-
+document.addEventListener('DOMContentLoaded', () => {
+  updateQuizScore(playerScore); 
+});
 
   

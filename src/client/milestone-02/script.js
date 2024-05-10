@@ -7,6 +7,11 @@
 let timerInterval;
 let selectedQuizData;
 
+/**
+ * 
+ * @param {string} url The URL used to fetch data from.
+ * @returns {Promise<any>} Returns the promise resolving with fetched data or the rejected error. 
+ */
 function mockFetch(url) {
   //this is a mocking fetch operation from some API that we can eventually create!
   return new Promise((resolve, reject) => {
@@ -27,6 +32,11 @@ function mockFetch(url) {
 
 
 //eventually, this will be in a pouchDB database. For now, we will just keep it like this 
+
+/**
+ * Quiz data for history questions.
+ * @type {Object[]}
+ */
 let historyQuizData = [
     {
       question: "What year did World War II end?",
@@ -40,6 +50,10 @@ let historyQuizData = [
     },
   ];
 
+/**
+ * Quiz data for science questions.
+ * @type {Object[]}
+ */
 let scienceQuizData = [
     {
         question: "What is the chemical symbol for water?",
@@ -54,6 +68,10 @@ let scienceQuizData = [
     },
 ];
 
+/**
+ * Quiz data for math questions.
+ * @type {Object[]}
+ */
 let mathQuizData = [
   {
       question: "What is the value of pi (π)?",
@@ -77,6 +95,10 @@ let mathQuizData = [
   let score = 0;
   let timeLeft = 10; //maybe change this to update dynamically, like 5 seconds per question?
 
+  /**
+   * Starts quiz according to the category unless an error is caught.
+   * @param {string} category Category of the quiz ("history", "science", "math").
+   */
   async function startQuiz(category) { //this functions as expected, you can tell when you click a category it takes a sec to "load"
     try {
       selectedQuizData = await mockFetch(category.toLowerCase());
@@ -89,7 +111,7 @@ let mathQuizData = [
     }
   }
   
-  //generates elements for displaying a quiz question
+  
   function loadQuestion(selectedQuizData) {
     const questionElement = document.getElementById("question-text");
     const answerElement = document.getElementById("answers");
@@ -111,7 +133,6 @@ let mathQuizData = [
     });
   }
 
-  //compares user answer to solution and updates score accordingly, loads next question if applicable
   function checkAnswer(answer, selectedQuizData) {
     const currentQuizData = selectedQuizData[currentQuestion];
         if (answer === currentQuizData.correctAnswer) {
@@ -127,7 +148,6 @@ let mathQuizData = [
         }
     }
   
-  //manages countdown timer 
   function startTimer() {
     const timerElement = document.getElementById("time-left");
     timerInterval = setInterval(() => {
@@ -141,7 +161,6 @@ let mathQuizData = [
     }, 1000); 
   }
   
-  //concludes quiz and changes the display screen
   function endQuiz(selectedQuizData) {
     const quizSection = document.getElementById("quiz");
     const resultSection = document.getElementById("result");
@@ -157,6 +176,10 @@ let mathQuizData = [
     updateTotalScore(score);
   }
   
+
+  /**
+   * Restarts the quiz
+   */
   function restartQuiz() {
     //resets quiz variables, question, and timer
     currentQuestion = 0;
@@ -174,6 +197,9 @@ let mathQuizData = [
     showAnswersButton.style.display = "none"; 
   }
 
+/**
+ * Reveals correct answers for each question.
+ */
 function showCorrectAnswers() {
   const resultSection = document.getElementById("result");
   const correctAnswersSection = document.getElementById("correct-answers");
@@ -203,12 +229,19 @@ function showCorrectAnswers() {
   }
 }
 
+/**
+ * Exits the quiz and resets player score to 0.
+ */
 function quitQuiz() {
   localStorage.setItem('playerScore', '0'); //reset player score
   window.location.reload();
 }
 
-//should store quiz score to local storage
+/**
+ * Initializes quiz score by checking local storage
+ * and if it isn't there then set to 0.
+ * @returns {number} Initialized quiz score.
+ */
 function initializeQuizScore(){
   let playerScore = localStorage.getItem('playerScore');
   if(playerScore === null){
@@ -218,6 +251,11 @@ function initializeQuizScore(){
   return parseInt(playerScore);
 }
 
+/**
+ * Updates player's quiz score to the given score and updated
+ * to local storage accordingly.
+ * @param {number} scoreToAdd The score to add to player's current score. 
+ */
 function updateQuizScore(scoreToAdd){
   let playerScore = initializeQuizScore();
   playerScore+=scoreToAdd;
@@ -228,18 +266,24 @@ function updateQuizScore(scoreToAdd){
 
 let playerScore = initializeQuizScore();
 
-function updateTotalScore(){
-  let totalScore = 0;
-  selectedQuizData.forEach(question => {
-      if (checkAnswer(question.answer, question.correctAnswer)) {
-        totalScore++; // Increment total score for each correct answer
-      }
-    });
-  updateQuizScore(totalScore);
+//should store total score to local storage
+function initializeTotalScore(){
+  let totalScore = localStorage.getItem('totalScore');
+  if(totalScore === null){
+    localStorage.setItem('totalScore', 0);
+    totalScore = '0';
+  }
+  return parseInt(totalScore);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  updateQuizScore(playerScore); 
-});
+function updateTotalScore(scoreToAdd){
+  let totalScore = initializeTotalScore();
+  totalScore+=scoreToAdd;
+  localStorage.setItem('totalScore', totalScore.toString());
+  const totalScoreElement = document.getElementById('total-score');
+  totalScoreElement.textContent = 'Total Score:' + totalScore;
+}
+
+
 
   

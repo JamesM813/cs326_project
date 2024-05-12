@@ -37,7 +37,7 @@ const Database = async (dbname) => {
                 const data = await db.get("scores")
                 data.scores.push({ score })
                 await db.put(data)
-                db.close()
+                await db.close()
                 return { status: "success" }
             } catch(err){
                 return {

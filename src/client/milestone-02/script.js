@@ -1,115 +1,28 @@
-/**
- * Our quiz questions.
- * We may have to move them to a different file or a mock database
- * @type {Array<Object>} An array of objects representing quiz questions, possible answers, and the correct answer.
- */
-
 let timerInterval;
-let selectedQuizData;
-
-/**
- * 
- * @param {string} url The URL used to fetch data from.
- * @returns {Promise<any>} Returns the promise resolving with fetched data or the rejected error. 
- */
-function mockFetch(url) {
-  //this is a mocking fetch operation from some API that we can eventually create!
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (url === 'history') {
-        resolve(historyQuizData);
-      } else if (url === 'science') {
-        resolve(scienceQuizData);
-      } else if (url === 'math') {
-        resolve(mathQuizData);
-      } else {
-        reject(new Error('Invalid URL'));
-      }
-    }, Math.random() * 1000); // simulating network delay
-  });
-}
-
-
-
-//eventually, this will be in a pouchDB database. For now, we will just keep it like this 
-
-/**
- * Quiz data for history questions.
- * @type {Object[]}
- */
-let historyQuizData = [
-    {
-      question: "What year did World War II end?",
-      answers: ["1945", "1939", "1950", "1940"],
-      correctAnswer: "1945"
-    },
-    {
-      question: "What is the capital of France?",
-      answers: ["London", "Rome", "Paris", "Madrid"],
-      correctAnswer: "Paris"
-    },
-  ];
-
-/**
- * Quiz data for science questions.
- * @type {Object[]}
- */
-let scienceQuizData = [
-    {
-        question: "What is the chemical symbol for water?",
-        answers: ["H2O", "CO2", "NaCl", "O2"],
-        correctAnswer: "H2O"
-    },
-
-    {
-      question: "What is the closest planet to the sun?",
-      answers: ["Venus", "Mars", "Earth", "Mercury"],
-      correctAnswer: "Mercury"
-    },
-];
-
-/**
- * Quiz data for math questions.
- * @type {Object[]}
- */
-let mathQuizData = [
-  {
-      question: "What is the value of pi (π)?",
-      answers: ["3.14", "2.71", "1.618", "4.669"],
-      correctAnswer: "3.14"
-  },
-  {
-      question: "What is the square root of 81?",
-      answers: ["7", "8", "9", "10"],
-      correctAnswer: "9"
-  }
-];
-
-//here we are assuming that we do NOT have our data yet, while we mock the process
-
-
-  
-//we will also add more types of question in the back-end
-
-  let currentQuestion = 0;
-  let score = 0;
-  let timeLeft = 10; //maybe change this to update dynamically, like 5 seconds per question?
+let currentQuestion = 0;
+let score = 0;
+let timeLeft = 10;
 
   /**
    * Starts quiz according to the category unless an error is caught.
    * @param {string} category Category of the quiz ("history", "science", "math").
    */
-  async function startQuiz(category) { //this functions as expected, you can tell when you click a category it takes a sec to "load"
+  async function startQuiz(category) { 
     try {
-      selectedQuizData = await mockFetch(category.toLowerCase());
-      const quizSection = document.getElementById("quiz");
-      quizSection.style.display = "none";
-      loadQuestion(selectedQuizData);
-      startTimer();
+      const url = `/quizQuestions?category=${category}`
+      const response = await fetch(url)
+  
+      if (!response.ok) {
+        throw new Error('Failed to load quiz data');
+      }
+      const quizData = await response.json()
+      console.log(`Quiz data loaded for category '${category}':`, quizData)
+      loadQuestion(quizData)
     } catch (error) {
-      console.error(error);
+      console.error('Error starting quiz:', error);
     }
   }
+  
   
   
   function loadQuestion(selectedQuizData) {
@@ -135,7 +48,7 @@ let mathQuizData = [
 
   function checkAnswer(answer, selectedQuizData) {
     const currentQuizData = selectedQuizData[currentQuestion];
-        if (answer === currentQuizData.correctAnswer) {
+        if (answer === currentQuizData.answer) {
             score++;
             updateQuizScore(1);
         }
@@ -200,30 +113,30 @@ let mathQuizData = [
 /**
  * Reveals correct answers for each question.
  */
-function showCorrectAnswers() {
+function showanswers() {
   const resultSection = document.getElementById("result");
-  const correctAnswersSection = document.getElementById("correct-answers");
+  const answersSection = document.getElementById("correct-answers");
 
 
-  if (correctAnswersSection.style.display === "block") {
-      correctAnswersSection.style.display = "none";
+  if (answersSection.style.display === "block") {
+      answersSection.style.display = "none";
 
       resultSection.querySelector("button").style.display = "block";
   } else {
-      correctAnswersSection.innerHTML = "";
+      answersSection.innerHTML = "";
  
-      const correctAnswersList = document.createElement("ul");
-      correctAnswersList.classList.add("correct-answers-list");
+      const answersList = document.createElement("ul");
+      answersList.classList.add("correct-answers-list");
 
       selectedQuizData.forEach((question, index) => {
           const listItem = document.createElement("li");
-          listItem.innerHTML = `<strong>Question ${index + 1}:</strong> ${question.correctAnswer}`;
-          correctAnswersList.appendChild(listItem);
+          listItem.innerHTML = `<strong>Question ${index + 1}:</strong> ${question.answer}`;
+          answersList.appendChild(listItem);
       });
  
-      correctAnswersSection.appendChild(correctAnswersList);
+      answersSection.appendChild(answersList);
 
-      correctAnswersSection.style.display = "block";
+      answersSection.style.display = "block";
 
       resultSection.querySelector("button").style.display = "none";
   }

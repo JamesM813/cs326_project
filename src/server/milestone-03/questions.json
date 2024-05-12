@@ -1,59 +1,19 @@
  {   
-    "history questions" : [
-        {
-            "_id": "000",
-            "question": "Welcome to Trivia Fun! Click 'B'!",
-            "options": {        
-                "a": "Wrong answer!",
-                "b": "Click Me!",
-                "c": "Not this one...",
-                "d": "Getting colder!"
-            },
-            "answer": "b"
-        },
+    "history" : [
         {
             "_id": "001",
             "question": "What year was the Magna Carta signed?",
-            "options": {        
-                "a": "1251",
-                "b": "1225",
-                "c": "1212",
-                "d": "1215"
-            },
-            "answer": "d"
-        },
+            "answers": ["1122","1152","1221","1215"],
+            "answer": "1215"
+        }
+    ],
+    
+    "science" : [
         {
-            "_id": "002",
-            "question": "Who was the longest reigning monarch in the world?",
-            "options": {        
-                "a": "Queen Elizabeth II",
-                "b": "Louis XIV",
-                "c": "Queen Victoria",
-                "d": "King Charles"
-            },
-            "answer": "b"
-        },
-        {
-            "_id": "003",
-            "question": "",
-            "options": {        
-                "a": "",
-                "b": "",
-                "c": "",
-                "d": ""
-            },
-            "answer": ""
-        },
-    {
-            "_id": "",
-            "question": "",
-            "options": {        
-                "a": "",
-                "b": "",
-                "c": "",
-                "d": ""
-            },
-            "answer": ""
-        } 
+            "id": "011",
+            "question": "What are the four DNA pairs?",
+            "answers": ["actg","agtm","ctgm","macr"],
+            "answer": "actg"
+        }
     ]
  }

@@ -24,6 +24,22 @@ app.post('/savePlayerScore', async (req, res) => {
   }
 });
 
+app.get('/quizQuestions/', async (req, res) => {
+  console.log(`GET /quizQuestions/${req.body}`);
+  try {
+    const { category } = req.query
+    if (!category) {
+      return res.status(400).json({ error: 'Category parameter is required' });
+    }
+
+    const questions = await database.getQuizQuestions(category);
+    res.status(200).json(questions);
+  } catch (error) {
+    console.error('Failed to retrieve quiz questions:', error);
+    res.status(500).json({ error: 'Failed to retrieve quiz questions' });
+  }
+});
+
 app.get('/highestScores', async (req, res) => {
   console.log("GET /highestScores");
 

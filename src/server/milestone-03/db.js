@@ -1,4 +1,5 @@
 import PouchDB from "pouchdb";
+import questionData from './questions.json' assert { type: 'json' };
 
 /**
  * Initializes a PouchDB database with specified collections if they do not
@@ -7,16 +8,24 @@ import PouchDB from "pouchdb";
  * @param {string} dbname - The name of the database to initialize.
  */
 const initdb = async (dbname) => {
-  const db = new PouchDB(dbname);
+    const db = new PouchDB(dbname);
   
-  try {
-    await db.get("scores");
-  } catch (e) {
-    await db.put({ _id: "scores", scores: [] });
-  }
-
-  await db.close();
-};
+    try {
+      await db.get("scores");
+    } catch (e) {
+      await db.put({ _id: "scores", scores: [] });
+    }
+  
+    try {
+      const existingQuestions = await db.get("questions");
+      await db.remove(existingQuestions._id, existingQuestions._rev);
+    } catch (e) {
+      console.error(e)
+    }
+    await db.put({ _id: "questions", questions: questionData });
+    await db.close();
+  };
+  
 
 const Database = async (dbname) => {
     await initdb(dbname);
@@ -24,7 +33,34 @@ const Database = async (dbname) => {
     const getDB = () => new PouchDB(dbname);
 
     const obj = {
-        
+        /**
+         * Asynchronously retrieves quiz questions based on the specified category.
+         *
+         * @param {string} category - The category of questions to retrieve ("history", "science", "math").
+         * @returns {Promise<Object[]>} A promise containing an array of quiz questions.
+         */
+        getQuizQuestions: async (category) => {
+            try {
+                const db = getDB()
+                const data = await db.get("questions")
+                if (data && data.questions && data.questions[category]) {
+                    await db.close();
+                    return data.questions[category];
+                } else {
+                    await db.close();
+                    return {
+                        status: "Error",
+                        message: `Category '${category}' not found in quiz questions.`,
+                    };
+                }
+            } catch (err) {
+            return {
+                status: "Error",
+                message: "Failed to get quiz questions",
+                error: err.message,
+            };
+            }
+        },
         /**
          * Asynchronously records a user's score in the database.
          *
@@ -48,6 +84,12 @@ const Database = async (dbname) => {
             }
         },
 
+        /**
+         * Asynchronously updates a user's score in the database.
+         *
+         * @param {number} score - The new score achieved by the user.
+         * @returns {Promise<object>} A promise indicating the result of the operation.
+         */
         updatePlayerScore: async (newScore) => {
             try{
                 const db = getDB()
@@ -87,6 +129,11 @@ const Database = async (dbname) => {
             }
         },
 
+        /**
+         * Asynchronously deletes a user's score in the database.
+         *
+         * @returns {Promise<object>} A promise indicating the result of the operation.
+         */
         deletePlayerScore: async () => {
             try {
               const db = getDB()

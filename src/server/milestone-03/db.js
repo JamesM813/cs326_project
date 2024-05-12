@@ -22,7 +22,7 @@ const Database = async (dbname) => {
     await initdb(dbname);
 
     const getDB = () => new PouchDB(dbname);
-    
+
     const obj = {
         
         /**
@@ -57,7 +57,7 @@ const Database = async (dbname) => {
             try{
                 const db = getDB()
                 const data = await db.get("scores")
-                const sorted = data.sort((a,b) => b.score - a.score)
+                const sorted = data.scores.sort((a,b) => b.score - a.score)
                 const top10 = sorted.slice(0,10)
                 await db.close();
                 return { status: "success", data: top10 };

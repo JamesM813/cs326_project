@@ -19,7 +19,7 @@ async function basicServer(request, response) {
 
     try {
       const { score } = query;
-      await database.savePlayerScore(score);
+      await database.savePlayerScore(parseInt(score));
       response.writeHead(200);
       response.end();
     } catch (error) {
@@ -33,7 +33,7 @@ async function basicServer(request, response) {
     try {
       const data = await database.top10Scores();
       response.writeHead(200, { "Content-Type": "application/json" });
-      response.write(JSON.stringify(data));
+      response.write(JSON.stringify(data.data));
       response.end();
     } catch (error) {
       console.log("Failed to retrieve highest scores:", error);
@@ -41,30 +41,45 @@ async function basicServer(request, response) {
       response.end();
     }
   } else {
-
-    const { pathname } = parsedUrl;
-    const filePath = pathname === "/" ? "/index.html" : pathname;
-
-    try {
-      // Read the file from the 'client' directory
-      const fileData = await readFile(path.join(__dirname, "client", filePath), "utf8");
-
-      // Determine the content type based on the file extension
-      let contentType = "text/html";
-      if (filePath.endsWith(".css")) contentType = "text/css";
-      else if (filePath.endsWith(".js")) contentType = "application/javascript";
-      else if (filePath.endsWith(".json")) contentType = "application/json";
-
-      // Send the file data with appropriate content type
-      response.writeHead(200, { "Content-Type": contentType });
-      response.write(fileData);
-      response.end();
-    } catch (error) {
-      console.error("Failed to serve static file:", error);
-      response.writeHead(404);
-      response.end();
+    const sendIt = async (pathname, type) => {
+        // The client files are found in the client directory, so we must prepend
+        // the client path to the file requested. We also recognize the meaning of
+        // a '/' to refer to the index.html file.
+        const file = pathname === "/" ? "index.html" : pathname;
+        try {
+          const data = await readFile(
+            path.join(
+              path.dirname(url.fileURLToPath(import.meta.url)),
+              "..",
+              "client",
+              file,
+            ),
+            "utf8",
+          );
+          response.writeHead(200, { "Content-Type": type });
+          response.write(data);
+        } catch (err) {
+          response.statusCode = 404;
+          response.write("Not found");
+        }
+        response.end();
+      };
+  
+      // Determine the content type of the requested file (if it is a file).
+      if (pathname.endsWith(".css")) {
+        sendIt(pathname, "text/css");
+      } else if (pathname.endsWith(".js")) {
+        sendIt(pathname, "text/javascript");
+      } else if (pathname.endsWith(".json")) {
+        sendIt(pathname, "application/json");
+      } else if (pathname.endsWith(".html")) {
+        sendIt(pathname, "text/html");
+      } else if (pathname.endsWith("/")) {
+        sendIt(pathname, "text/html");
+      } else {
+        sendIt(pathname, "text/plain");
+      }
     }
-  }
 }
 
 // Start the server on port 3260.

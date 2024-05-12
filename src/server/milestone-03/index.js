@@ -1,9 +1,11 @@
 import express from 'express';
+import cors from 'cors';
 import Database from './db.js';
 
 const app = express();
-const port = 3260;
+const port = 3000;
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -25,7 +27,7 @@ app.post('/savePlayerScore', async (req, res) => {
 });
 
 app.get('/quizQuestions/', async (req, res) => {
-  console.log(`GET /quizQuestions/${req.body}`);
+  console.log(`GET /quizQuestions?category=${req.body}`);
   try {
     const { category } = req.query
     if (!category) {
@@ -64,7 +66,7 @@ app.put('/updatePlayerScore', async (req, res) => {
     }
   });
   
-  app.delete('/deletePlayerScore', async (req, res) => {
+app.delete('/deletePlayerScore', async (req, res) => {
     try {
       const result = await database.deletePlayerScore();
       res.status(200).json(result.data);
@@ -74,7 +76,10 @@ app.put('/updatePlayerScore', async (req, res) => {
     }
   });
 
-app.use(express.static('client'));
+
+app.route("*").all(async (request, response) => {
+    response.status(404).send(`Not found: ${request.path}`);
+  });
 
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);

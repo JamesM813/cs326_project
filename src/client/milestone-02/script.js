@@ -9,7 +9,7 @@ let timeLeft = 10;
    */
   async function startQuiz(category) { 
     try {
-      const url = `/quizQuestions?category=${category}`
+      const url = `http://localhost:3000/quizQuestions?category=${category}`
       const response = await fetch(url)
   
       if (!response.ok) {

@@ -24,7 +24,6 @@ app.post('/savePlayerScore', async (req, res) => {
   }
 });
 
-// Route to handle retrieving the highest scores
 app.get('/highestScores', async (req, res) => {
   console.log("GET /highestScores");
 
@@ -37,9 +36,30 @@ app.get('/highestScores', async (req, res) => {
   }
 });
 
+app.put('/updatePlayerScore', async (req, res) => {
+  
+    try {
+      const { newScore } = req.body;
+      const result = await database.updatePlayerScore(parseInt(newScore));
+      res.status(200).json(result);
+    } catch (error) {
+      console.error("Failed to update player score:", error);
+      res.status(500).json({ error: "Failed to update player score" });
+    }
+  });
+  
+  app.delete('/deletePlayerScore', async (req, res) => {
+    try {
+      const result = await database.deletePlayerScore();
+      res.status(200).json(result);
+    } catch (error) {
+      console.error("Failed to delete player scores:", error);
+      res.status(500).json({ error: "Failed to delete player scores" });
+    }
+  });
+
 app.use(express.static('client'));
 
-// Start the server
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
 });

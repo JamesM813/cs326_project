@@ -48,6 +48,23 @@ const Database = async (dbname) => {
             }
         },
 
+        updatePlayerScore: async (newScore) => {
+            try{
+                const db = getDB()
+                const data = db.get("scores");
+                data.scores.push({score: newScore})
+                await db.put(data)
+                await db.close()
+                return { status: "success" }
+            } catch(err){
+                return {
+                    status: "Error",
+                    message: "Failed to update player score",
+                    error: err.message
+                }
+            }
+        },
+
         /**
          * Asynchronously retrieves the top 10 scores from the database.
          *
@@ -59,8 +76,8 @@ const Database = async (dbname) => {
                 const data = await db.get("scores")
                 const sorted = data.scores.sort((a,b) => b.score - a.score)
                 const top10 = sorted.slice(0,10)
-                await db.close();
-                return { status: "success", data: top10 };
+                await db.close()
+                return { status: "success", data: top10 }
             } catch(err){
                 return {
                     status: "Error",
@@ -68,7 +85,24 @@ const Database = async (dbname) => {
                     error: err.message
                 }
             }
-        }
+        },
+
+        deletePlayerScore: async () => {
+            try {
+              const db = getDB()
+              const data = await db.get("scores")
+              data.scores = []
+              await db.put(data)
+              await db.close()
+              return { status: "success" }
+            } catch (err) {
+              return {
+                status: "Error",
+                message: "Failed to delete player scores",
+                error: err.message,
+              }
+            }
+          }
     }
     return obj
 }

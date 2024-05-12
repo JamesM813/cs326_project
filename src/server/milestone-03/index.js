@@ -41,7 +41,7 @@ app.put('/updatePlayerScore', async (req, res) => {
     try {
       const { newScore } = req.body;
       const result = await database.updatePlayerScore(parseInt(newScore));
-      res.status(200).json(result);
+      res.status(200).json(result.data);
     } catch (error) {
       console.error("Failed to update player score:", error);
       res.status(500).json({ error: "Failed to update player score" });
@@ -51,7 +51,7 @@ app.put('/updatePlayerScore', async (req, res) => {
   app.delete('/deletePlayerScore', async (req, res) => {
     try {
       const result = await database.deletePlayerScore();
-      res.status(200).json(result);
+      res.status(200).json(result.data);
     } catch (error) {
       console.error("Failed to delete player scores:", error);
       res.status(500).json({ error: "Failed to delete player scores" });

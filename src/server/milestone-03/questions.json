@@ -15,5 +15,14 @@
             "answers": ["actg","agtm","ctgm","macr"],
             "answer": "actg"
         }
+    ],
+
+    "math" : [
+        {
+            "id": "021",
+            "question": "What are the first 6 digits of pi?",
+            "answers": ["3.14156", "3.15149", "3.14518", "3.14159"],
+            "answer": "3.14159"
+        }
     ]
  }

@@ -6,33 +6,35 @@ import PouchDB from "pouchdb";
  *
  * @param {string} dbname - The name of the database to initialize.
  */
-const initdb = async (dbname, questions) => {
+const initdb = async (dbname) => {
   const db = new PouchDB(dbname);
-
+  
   try {
-      await db.put({
-          _id: "questions",
-          questions: questions
-      });
-      console.log("Questions stored in the database.");
+    await db.get("scores");
   } catch (e) {
-      console.error("Error storing questions in the database:", e);
+    await db.put({ _id: "scores", scores: [] });
   }
 
-  db.close();
+  await db.close();
 };
 
-const Database = async (dbname, questions) => {
-    await initdb(dbname, questions);
+const Database = async (dbname) => {
+    await initdb(dbname);
 
     const getDB = () => new PouchDB(dbname);
     const obj = {
-        //we can put db functions in here
-        savePlayerScore: async (name, score) => {
+        
+        /**
+         * Asynchronously records a user's score in the database.
+         *
+         * @param {number} score - The score achieved by the user.
+         * @returns {Promise<object>} A promise indicating the result of the operation.
+         */
+        savePlayerScore: async (score) => {
             try{
                 const db = getDB()
-                const data = await db.get("games")
-                data.games.push({ name, score })
+                const data = await db.get("scores")
+                data.scores.push({ score })
                 await db.put(data)
                 db.close()
                 return { status: "success" }
@@ -43,9 +45,31 @@ const Database = async (dbname, questions) => {
                     error: err.message
                 }
             }
+        },
+
+        /**
+         * Asynchronously retrieves the top 10 scores from the database.
+         *
+         * @returns {Promise<object>} A promise containing the top 10 scores.
+         */
+        top10Scores: async () => {
+            try{
+                const db = getDB()
+                const data = await db.get("scores")
+                const sorted = data.sort((a,b) => b.score - a.score)
+                const top10 = sorted.slice(0,10)
+                await db.close();
+                return { status: "success", data: top10Scores };
+            } catch(err){
+                return {
+                    status: "Error",
+                    message: "Failed to get top 10 scores",
+                    error: err.message
+                }
+            }
         }
     }
     return obj
 }
 
-export default Database
+export default Database;

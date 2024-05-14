@@ -1,7 +1,8 @@
 let timerInterval;
 let currentQuestion = 0;
 let score = 0;
-let timeLeft = 10;
+let timeLeft = 10
+let quizData;
 
   /**
    * Starts quiz according to the category unless an error is caught.
@@ -15,7 +16,7 @@ let timeLeft = 10;
       if (!response.ok) {
         throw new Error('Failed to load quiz data');
       }
-      const quizData = await response.json()
+      quizData = await response.json()
       console.log(`Quiz data loaded for category '${category}':`, quizData)
       loadQuestion(quizData)
     } catch (error) {
@@ -25,12 +26,12 @@ let timeLeft = 10;
   
   
   
-  function loadQuestion(selectedQuizData) {
+  function loadQuestion(quizData) {
     const questionElement = document.getElementById("question-text");
     const answerElement = document.getElementById("answers");
     const questionNumberElement = document.getElementById("question-number");
   
-    const currentQuizData = selectedQuizData[currentQuestion];
+    const currentQuizData = quizData[currentQuestion];
   
     questionElement.innerText = currentQuizData.question;
     questionNumberElement.innerText = currentQuestion + 1;
@@ -41,25 +42,46 @@ let timeLeft = 10;
       const button = document.createElement("button");
       button.innerText = answer;
       button.classList.add("btn");
-      button.addEventListener("click", () => checkAnswer(answer, selectedQuizData));
+      button.addEventListener("click", () => checkAnswer(answer, quizData));
       answerElement.appendChild(button);
     });
   }
 
-  function checkAnswer(answer, selectedQuizData) {
+  async function checkAnswer(answer, selectedQuizData) {
     const currentQuizData = selectedQuizData[currentQuestion];
         if (answer === currentQuizData.answer) {
             score++;
             updateQuizScore(1);
+              
+            try {
+              const response = await fetch('http://localhost:3000/updatePlayerScore', {
+                  method: 'PUT',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ score }),
+                });
+            
+                if (!response.ok) {
+                  throw new Error('Failed to update player score');
+                }
+            
+                console.log('Player score updated successfully')
+              } catch (error) {
+                console.error('Error updating player score:', error);
+                throw error;
+              }
+            
         }
         currentQuestion++;
         if (currentQuestion < selectedQuizData.length) {
-            loadQuestion(selectedQuizData);
+            loadQuestion(quizData);
         } else {
             clearInterval(timerInterval);
-            endQuiz(selectedQuizData);
+            endQuiz(quizData);
         }
-    }
+      }
+    
   
   function startTimer() {
     const timerElement = document.getElementById("time-left");
@@ -69,12 +91,12 @@ let timeLeft = 10;
         timerElement.innerText = timeLeft;
       } else {
         clearInterval(timerInterval);
-        checkAnswer("", selectedQuizData);
+        checkAnswer("", quizData);
       }
     }, 1000); 
   }
   
-  function endQuiz(selectedQuizData) {
+  async function endQuiz(selectedQuizData) {
     const quizSection = document.getElementById("quiz");
     const resultSection = document.getElementById("result");
     const resultTextElement = document.getElementById("result-text");
@@ -87,6 +109,32 @@ let timeLeft = 10;
   
     resultTextElement.innerText = `You scored ${score} out of ${selectedQuizData.length}!`;
     updateTotalScore(score);
+
+    try {
+      const url = 'http://localhost:3000/savePlayerScore';
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ score }), // Pass the score in the body
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to save score data');
+      }
+
+      if (response.status === 204) {
+        console.log('Player score saved successfully');
+        return; // No need to parse response
+      }
+  
+      // Log success message
+      console.log('Player score saved successfully');
+    } catch (error) {
+      console.error('Error saving quiz score:', error);
+      throw error;
+    }
   }
   
 
@@ -99,7 +147,7 @@ let timeLeft = 10;
     score = 0;
     timeLeft = 11;
     startTimer();
-    loadQuestion(selectedQuizData);
+    loadQuestion(quizData);
   
     const quizSection = document.getElementById("quiz");
     const resultSection = document.getElementById("result");
@@ -191,12 +239,7 @@ function initializeTotalScore(){
 
 function updateTotalScore(scoreToAdd){
   let totalScore = initializeTotalScore();
-  totalScore+=scoreToAdd;
+  totalScore +=scoreToAdd;
   localStorage.setItem('totalScore', totalScore.toString());
-  const totalScoreElement = document.getElementById('total-score');
-  totalScoreElement.textContent = 'Total Score:' + totalScore;
 }
-
-
-
   
